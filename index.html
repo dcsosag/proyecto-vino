@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Project: Calidad del Vinho Verde</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Header -->
+    <header class="bg-red-900 text-white py-20 px-10 text-center shadow-lg">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">Predicción de Calidad del Vino</h1>
+        <p class="text-xl opacity-90 italic">Machine Learning con Databricks, XGBoost y MLflow</p>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-6 md:p-12">
+        
+        <!-- Introducción -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold border-b-4 border-red-700 inline-block mb-6">Resumen del Proyecto</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                Este proyecto utiliza datos fisicoquímicos del vino portugués <strong>"Vinho Verde"</strong> para predecir si un vino será de alta calidad (puntuación ≥ 7). 
+                Implementé un flujo completo de MLOps utilizando Databricks y MLflow.
+            </p>
+            <div class="flex flex-wrap gap-4 mt-6">
+                <span class="bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">#Python</span>
+                <span class="bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">#XGBoost</span>
+                <span class="bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">#MLflow</span>
+                <span class="bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">#Spark</span>
+                <span class="bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">#Databricks</span>
+            </div>
+        </section>
+
+        <!-- Análisis Exploratorio -->
+        <section class="mb-16 bg-white p-8 rounded-xl shadow-md">
+            <h2 class="text-3xl font-bold mb-6 italic text-red-900 italic">1. Análisis de Datos (EDA)</h2>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="mb-4">Identificamos que las variables más influyentes son:</p>
+                    <ul class="list-disc ml-6 space-y-2">
+                        <li><strong>Alcohol:</strong> Los vinos de alta calidad presentan mayor graduación alcohólica.</li>
+                        <li><strong>Densidad:</strong> Existe una relación inversa con la calidad.</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-100 p-4 rounded text-center border-2 border-dashed border-gray-300">
+                    <p class="text-gray-500 italic">[Aquí puedes insertar la imagen de tus Box Plots]</p>
+                    <!-- <img src="tus-boxplots.png" alt="Boxplots" class="rounded shadow"> -->
+                </div>
+            </div>
+        </section>
+
+        <!-- El Proceso de Modelado -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold mb-8">2. Entrenamiento y Optimización</h2>
+            
+            <div class="space-y-12">
+                <!-- Modelo Base -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-1/3 font-bold text-red-800 text-xl underline">Modelo Base: Random Forest</div>
+                    <div class="md:w-2/3 border-l-4 border-gray-300 pl-6">
+                        Entrenamos un clasificador básico obteniendo un <strong>AUC de 0.854</strong>. Se utilizó una clase personalizada para manejar las probabilidades de predicción.
+                    </div>
+                </div>
+
+                <!-- Optimización -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-1/3 font-bold text-red-800 text-xl underline">Optimización: XGBoost + Hyperopt</div>
+                    <div class="md:w-2/3 border-l-4 border-gray-300 pl-6">
+                        Usando búsqueda de hiperparámetros en paralelo, logramos elevar el <strong>AUC a 0.904</strong>. 
+                        Ajustamos: <code>learning_rate</code>, <code>max_depth</code> y <code>reg_lambda</code>.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MLflow y Registro -->
+        <section class="mb-16 bg-red-50 p-8 rounded-xl border border-red-100">
+            <h2 class="text-3xl font-bold mb-6 text-red-900">3. MLOps con MLflow Model Registry</h2>
+            <p class="mb-6 italic">El modelo no solo se entrenó, se gestionó profesionalmente:</p>
+            <div class="grid md:grid-cols-3 gap-4 text-center">
+                <div class="bg-white p-4 rounded shadow">
+                    <i class="fa-solid fa-microscope text-2xl text-red-700 mb-2"></i>
+                    <p class="font-bold">Tracking</p>
+                    <p class="text-sm">Registro de métricas AUC y parámetros.</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow">
+                    <i class="fa-solid fa-box-archive text-2xl text-red-700 mb-2"></i>
+                    <p class="font-bold">Registry</p>
+                    <p class="text-sm">Control de versiones (V1 a V3).</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow">
+                    <i class="fa-solid fa-rocket text-2xl text-red-700 mb-2"></i>
+                    <p class="font-bold">Production</p>
+                    <p class="text-sm">Transición de modelo a estado "Production".</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inferencia -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold mb-6 italic text-red-900">4. Inferencia a Escala</h2>
+            <p class="mb-4 text-lg">
+                Finalmente, registramos el modelo como una <strong>Spark UDF</strong>. Esto permite realizar predicciones sobre tablas <strong>Delta</strong> con millones de filas de forma distribuida.
+            </p>
+            <pre class="bg-gray-900 text-green-400 p-6 rounded-lg overflow-x-auto shadow-xl">
+# Ejemplo de carga de modelo en producción
+model_uri = "models:/wine_quality/Production"
+predict_udf = mlflow.pyfunc.spark_udf(spark, model_uri)
+            </pre>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-6 text-center">
+        <p class="mb-4 italic">Proyecto desarrollado en Databricks Runtime 15.4 LTS ML</p>
+        <div class="flex justify-center gap-6">
+            <a href="#" class="hover:text-red-400"><i class="fa-brands fa-github text-3xl"></i></a>
+            <a href="#" class="hover:text-red-400"><i class="fa-brands fa-linkedin text-3xl"></i></a>
+        </div>
+    </footer>
+
+</body>
+</html>
