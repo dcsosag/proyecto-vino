@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Wine Quality Prediction | MLOps Portafolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <style>
+        scroll-behavior: smooth;
+        .image-placeholder {
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            min-height: 300px;
+            color: #6b7280;
+            margin: 1rem 0;
+        }
+        .sidebar-link:hover { background: #7f1d1d; color: white; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans leading-relaxed">
+
+    <!-- Barra de Navegación Lateral (Escritorio) -->
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-slate-900 text-white p-6 hidden lg:block overflow-y-auto">
+        <div class="mb-10 text-center">
+            <i class="fa-solid fa-wine-glass-empty text-4xl text-red-500 mb-4"></i>
+            <h2 class="text-xl font-bold">Vinho Verde ML</h2>
+            <p class="text-xs text-slate-400 uppercase tracking-widest mt-2">Documentación Técnica</p>
+        </div>
+        <nav class="space-y-2 text-sm">
+            <a href="#intro" class="sidebar-link block p-3 rounded transition">Introducción</a>
+            <a href="#objetivos" class="sidebar-link block p-3 rounded transition">Objetivos</a>
+            <a href="#stack" class="sidebar-link block p-3 rounded transition">Stack Tecnológico</a>
+            <a href="#ingenieria" class="sidebar-link block p-3 rounded transition">Ingeniería de Datos</a>
+            <a href="#eda" class="sidebar-link block p-3 rounded transition">Análisis Exploratorio (EDA)</a>
+            <a href="#modelado" class="sidebar-link block p-3 rounded transition">Modelado Base</a>
+            <a href="#hyperopt" class="sidebar-link block p-3 rounded transition">Optimización Hyperopt</a>
+            <a href="#mlflow" class="sidebar-link block p-3 rounded transition">MLOps y MLflow</a>
+            <a href="#inferencia" class="sidebar-link block p-3 rounded transition">Inferencia Distribuida</a>
+        </nav>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="lg:ml-64 pb-20">
+        
+        <!-- Header Hero -->
+        <header id="intro" class="bg-white border-b border-slate-200 py-20 px-8 md:px-16">
+            <div class="max-w-4xl">
+                <span class="text-red-700 font-bold tracking-widest uppercase text-sm italic">Proyecto de Ciencia de Datos End-to-End</span>
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mt-4 mb-6">Predicción de Calidad del Vino Portugués</h1>
+                <p class="text-xl text-slate-600 max-w-2xl">
+                    Desarrollo de un sistema de clasificación binaria para determinar la alta calidad del vino mediante el análisis de propiedades fisicoquímicas, implementado en un entorno distribuido con Databricks.
+                </p>
+            </div>
+        </header>
+
+        <div class="max-w-4xl mx-auto px-8 py-12">
+
+            <!-- Objetivos -->
+            <section id="objetivos" class="mb-20">
+                <h2 class="text-3xl font-bold mb-8 flex items-center">
+                    <i class="fa-solid fa-bullseye text-red-700 mr-4"></i>Objetivos del Proyecto
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h3 class="font-bold mb-2">Analíticos</h3>
+                        <p class="text-slate-600">Identificar los factores químicos (alcohol, pH, sulfatos) que tienen mayor correlación con la percepción de calidad del vino.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h3 class="font-bold mb-2">Ingeniería</h3>
+                        <p class="text-slate-600">Construir un pipeline de MLOps que permita el registro, versionamiento y despliegue automático del mejor modelo.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stack Tecnológico -->
+            <section id="stack" class="mb-20 bg-slate-900 text-white p-10 rounded-3xl shadow-2xl">
+                <h2 class="text-3xl font-bold mb-10 text-center italic">Stack de Herramientas</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div><i class="fa-brands fa-python text-4xl mb-4 text-yellow-500"></i><p>Python (Pandas/Sklearn)</p></div>
+                    <div><i class="fa-solid fa-cloud text-4xl mb-4 text-blue-400"></i><p>Databricks 15.4 LTS</p></div>
+                    <div><i class="fa-solid fa-infinity text-4xl mb-4 text-green-400"></i><p>MLflow Tracking</p></div>
+                    <div><i class="fa-solid fa-bolt text-4xl mb-4 text-orange-400"></i><p>Apache Spark</p></div>
+                </div>
+            </section>
+
+            <!-- Ingeniería de Datos -->
+            <section id="ingenieria" class="mb-20">
+                <h2 class="text-3xl font-bold mb-6">1. Ingeniería y Preparación de Datos</h2>
+                <p class="mb-6 italic">El dataset proviene del repositorio UCI Machine Learning. Se combinaron datos de vinos blancos y tintos.</p>
+                
+                <div class="bg-slate-800 rounded-lg p-6 mb-6">
+                    <pre class="text-sm text-green-400"><code># Combinación de datasets y feature engineering
+red_wine['is_red'] = 1
+white_wine['is_red'] = 0
+data = pd.concat([red_wine, white_wine], axis=0)
+
+# Estandarización de nombres para evitar errores en Spark
+data.rename(columns=lambda x: x.replace(' ', '_'), inplace=True)</code></pre>
+                </div>
+                <p class="text-slate-600">Se definió la variable objetivo <strong>"quality"</strong> como binaria: <span class="bg-red-100 text-red-800 px-2 py-1 rounded italic font-bold">1 (Alta Calidad ≥ 7)</span> y <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded italic font-bold">0 (Baja Calidad < 7)</span>.</p>
+            </section>
+
+            <!-- EDA -->
+            <section id="eda" class="mb-20">
+                <h2 class="text-3xl font-bold mb-6">2. Análisis Exploratorio de Datos (EDA)</h2>
+                <p class="mb-6 italic text-lg italic">¿Qué hace que un vino sea excepcional?</p>
+                
+                <div class="grid md:grid-cols-2 gap-8 mb-8 italic text-slate-800 italic">
+                    <div class="bg-white p-6 rounded shadow-sm border-t-4 border-red-700 italic">
+                        <h4 class="font-bold mb-2 italic underline text-red-800">El Factor Alcohol</h4>
+                        <p>Los diagramas de caja revelaron que la mediana del nivel de alcohol en vinos de alta calidad supera el tercer cuartil de los vinos de baja calidad.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded shadow-sm border-t-4 border-blue-700 italic">
+                        <h4 class="font-bold mb-2 italic underline text-red-800">El Factor Densidad</h4>
+                        <p>Se observó una relación inversa: a menor densidad, mayor probabilidad de pertenecer a la categoría de alta calidad.</p>
+                    </div>
+                </div>
+
+                <div class="image-placeholder">
+                    <p class="p-10 text-center italic">[Insertar aquí la gráfica de BoxPlots generada por el bucle for en Seaborn]</p>
+                </div>
+            </section>
+
+            <!-- Modelado Base -->
+            <section id="modelado" class="mb-20">
+                <h2 class="text-3xl font-bold mb-6">3. Modelado Base (Random Forest)</h2>
+                <p class="mb-6 italic">Como punto de partida, implementamos un Random Forest. Se utilizó un <strong>Wrapper personalizado</strong> para asegurar que las predicciones devolvieran probabilidades en lugar de solo etiquetas binarias.</p>
+                
+                <div class="bg-slate-800 rounded-lg p-6 mb-6 overflow-x-auto italic">
+                    <pre class="text-sm text-green-400"><code>class SklearnModelWrapper(mlflow.pyfunc.PythonModel):
+    def __init__(self, model):
+        self.model = model
+    def predict(self, context, model_input):
+        return self.model.predict_proba(model_input)[:,1] # Probabilidad de clase positiva</code></pre>
+                </div>
+                <div class="flex items-center p-6 bg-red-50 border-l-8 border-red-700 italic text-slate-700">
+                    <div>
+                        <p class="text-sm uppercase font-bold text-red-700 italic">Resultado Base</p>
+                        <p class="text-4xl font-black italic italic">AUC: 0.854</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hyperopt -->
+            <section id="hyperopt" class="mb-20">
+                <h2 class="text-3xl font-bold mb-6 italic text-red-900">4. Optimización con XGBoost y Hyperopt</h2>
+                <p class="mb-6 italic">Para superar el rendimiento base, utilizamos <strong>XGBoost</strong> con búsqueda de hiperparámetros automatizada mediante <strong>Hyperopt y SparkTrials</strong>. Esto permitió ejecutar pruebas en paralelo a través de los nodos del clúster de Databricks.</p>
+                
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-slate-100 p-4 rounded italic">
+                        <h5 class="font-bold italic">Espacio de búsqueda:</h5>
+                        <ul class="text-sm list-disc ml-5 italic">
+                            <li>learning_rate: 0.01 - 1.0</li>
+                            <li>max_depth: 2 - 20</li>
+                            <li>reg_alpha: 0 - 1.0</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-100 p-4 rounded italic italic">
+                        <h5 class="font-bold italic italic">Mejor configuración:</h5>
+                        <p class="text-xs italic underline">learning_rate: 0.1996, max_depth: 31, reg_alpha: 0.3032</p>
+                    </div>
+                </div>
+
+                <div class="bg-red-900 text-white p-8 rounded-2xl flex flex-col items-center italic shadow-xl shadow-red-100">
+                    <p class="text-lg uppercase tracking-widest italic">Rendimiento Final Optimizado</p>
+                    <p class="text-7xl font-black italic">0.904</p>
+                    <p class="mt-2 font-bold italic italic italic italic italic">Área Bajo la Curva (AUC)</p>
+                </div>
+            </section>
+
+            <!-- MLflow -->
+            <section id="mlflow" class="mb-20 italic italic text-slate-800">
+                <h2 class="text-3xl font-bold mb-6 italic text-red-900 italic italic">5. Ciclo de Vida MLOps (MLflow)</h2>
+                <p class="mb-8 italic">Cada experimento fue registrado en el <strong>Model Registry</strong>, permitiendo una trazabilidad total:</p>
+                
+                <div class="relative border-l-2 border-red-700 ml-4 space-y-10 italic italic text-slate-700">
+                    <div class="relative pl-8">
+                        <div class="absolute w-4 h-4 bg-red-700 rounded-full -left-[9px] top-1 italic shadow-sm"></div>
+                        <h4 class="font-bold italic">Registro de Versión:</h4>
+                        <p>El modelo XGBoost fue registrado como 'V3' en el Workspace de Databricks.</p>
+                    </div>
+                    <div class="relative pl-8 italic">
+                        <div class="absolute w-4 h-4 bg-red-700 rounded-full -left-[9px] top-1 italic shadow-sm"></div>
+                        <h4 class="font-bold italic italic italic italic">Transición de Etapa:</h4>
+                        <p>El modelo fue promovido de 'None' a 'Production' tras superar las pruebas de validación en el conjunto de test.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inferencia -->
+            <section id="inferencia" class="mb-20 italic italic italic text-slate-900">
+                <h2 class="text-3xl font-bold mb-6 italic italic italic text-red-900 italic italic italic">6. Inferencia Distribuida</h2>
+                <p class="mb-6 italic italic text-lg italic italic italic italic">Capacidad de aplicar el modelo a petabytes de datos usando Spark UDF.</p>
+                <div class="bg-slate-900 text-green-400 p-6 rounded-xl italic italic italic italic">
+                    <pre class="text-sm italic italic"><code># Aplicación de inferencia escalable
+import mlflow
+pyfunc_udf = mlflow.pyfunc.spark_udf(spark, model_uri="models:/wine_quality/Production")
+
+# Predicción sobre una tabla Delta
+df_predictions = df_wine.withColumn("prediction", pyfunc_udf(*feature_columns))</code></pre>
+                </div>
+                <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 italic text-sm italic italic italic">
+                    <strong>Nota técnica:</strong> Se resolvió el error de volumen UC_VOLUME_NOT_FOUND asegurando la persistencia en el Catálogo de Unity.
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-slate-900 text-slate-400 py-12 px-8 text-center italic italic italic italic italic italic">
+            <p class="mb-4 italic italic">Portafolio de Ciencia de Datos - 2026</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="hover:text-white transition italic italic"><i class="fa-brands fa-github text-2xl italic italic"></i></a>
+                <a href="#" class="hover:text-white transition italic italic italic italic"><i class="fa-brands fa-linkedin text-2xl italic italic italic"></i></a>
+            </div>
+        </footer>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script italic italic italic italic italic>hljs.highlightAll();</script>
+</body>
+</html>
